@@ -82,13 +82,13 @@ case $1 in
   do
     echo "==============";
     echo "Checking slave: $s";
-    ssh -t linux@linux13 'ps -ef | perl -lne "print \"\$1 \$2\" if m/^(?!root)\\w+\\s*(\\d+).*\\.(SecureDataNodeStarter|NodeManager)/"'
+    ssh -t $USER@$s 'ps -ef | perl -lne "print \"\$1 \$2\" if m/^(?!root)\\w+\\s*(\\d+).*\\.(DataNode|NodeManager)/"'
     echo "==============";
   done
 ;;
 
 "check-slave-single")
-  ps -ef | perl -lne "print \"\$1 \$2\" if m/^(?!root)\\w+\\s*(\\d+).*\\.(SecureDataNodeStarter|NodeManager)/"
+  ps -ef | perl -lne "print \"\$1 \$2\" if m/^(?!root)\\w+\\s*(\\d+).*\\.(DataNode|NodeManager)/"
 ;;
 
 "sync-slave")
