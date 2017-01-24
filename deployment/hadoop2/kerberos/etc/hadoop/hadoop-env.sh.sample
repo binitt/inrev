@@ -25,7 +25,8 @@
 export JAVA_HOME=/home/linux/jdk1.7.0_71/
 export HADOOP_PREFIX=/home/linux/hadoop
 export HADOOP_HEAPSIZE=2048
-export HADOOP_OPTS="-Dsun.security.krb5.debug=true"
+# enable this to debug kerberos
+#export HADOOP_OPTS="-Dsun.security.krb5.debug=true"
 
 
 #export JAVA_HOME=${JAVA_HOME}
