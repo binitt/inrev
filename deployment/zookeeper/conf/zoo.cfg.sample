@@ -30,5 +30,5 @@ clientPort=2181
 #autopurge.purgeInterval=1
 
 server.1=linux03:2888:3888
-server.1=linux04:2888:3888
-server.1=linux05:2888:3888
+server.2=linux04:2888:3888
+server.3=linux05:2888:3888
