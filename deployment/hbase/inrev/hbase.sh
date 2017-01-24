@@ -9,6 +9,14 @@ case $1 in
 
 "stop")
   ./bin/stop-hbase.sh
+  echo "Killing regionservers if found alive"
+  # might need to sleep sometime to prevent hbase data corruption
+  for s in $(cat conf/regionservers); do
+    echo "==============";
+    echo "Checking RegionServer: $s";
+    ssh -t $USER@$s "jps | grep [H]RegionServer | awk '{print \$1}' | xargs kill -9 2>/dev/null"
+    echo "==============";
+  done
 ;;
 
 "check")
