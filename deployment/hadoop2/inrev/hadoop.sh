@@ -3,17 +3,17 @@
 source inrev/hadoop.env
 
 case $1 in
-"start-all")
+"start")
   $0 "start-master"
   $0 "start-slave"
 ;;
 
-"stop-all")
+"stop")
   $0 "stop-master"
   $0 "stop-slave"
 ;;
 
-"check-all")
+"check")
   $0 "check-master"
   $0 "check-slave"
 ;;
@@ -125,7 +125,7 @@ case $1 in
 ;;
 
 *)
-  echo "Usage 1: $0 <start-all|stop-all|check-all>";
+  echo "Usage 1: $0 <start|stop|check>";
   echo "Usage 2: $0 <start-master|stop-master|check-master>";
   echo "Usage 3: $0 <start-slave|stop-slave|sync-slave|check-slave>";
   echo "Usage 4: $0 <start-slave-single|stop-slave-single|check-slave-single>";
