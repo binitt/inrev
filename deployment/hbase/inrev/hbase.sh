@@ -14,7 +14,7 @@ case $1 in
   for s in $(cat conf/regionservers); do
     echo "==============";
     echo "Checking RegionServer: $s";
-    ssh -t $USER@$s "jps | grep [H]RegionServer | awk '{print \$1}' | xargs kill -9 2>/dev/null"
+    ssh -t $USER@$s "jps | grep [H]RegionServer | awk '{print \$1}' | xargs kill -9 2>/dev/null" 2>/dev/null
     echo "==============";
   done
 ;;
@@ -27,7 +27,7 @@ case $1 in
   for s in $(cat conf/regionservers); do
     echo "==============";
     echo "Checking RegionServer: $s";
-    ssh -t $USER@$s "cd $HBASE_HOME && jps | grep [H]RegionServer"
+    ssh -t $USER@$s "cd $HBASE_HOME && jps | grep [H]RegionServer" 2>/dev/null
     echo "==============";
   done
 ;;
@@ -46,7 +46,7 @@ case $1 in
   do
     echo "==============";
     echo "Deleting logs slave: $s";
-    ssh -t $USER@$s "rm -r $HBASE_HOME/logs/*"
+    ssh -t $USER@$s "rm -r $HBASE_HOME/logs/*" 2>/dev/null
     echo "==============";
   done
 ;;

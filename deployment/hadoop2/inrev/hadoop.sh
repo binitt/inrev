@@ -40,7 +40,7 @@ case $1 in
 "start-slave")
   if [ "$KERBEROS_ENABLED" -eq "1" ]; then
     for s in $(cat etc/hadoop/slaves); do
-      ssh -t $USER@$s "cd $HADOOP_HOME && sudo sbin/hadoop-daemon.sh --config $HADOOP_CONF_DIR --script hdfs start datanode"
+      ssh -t $USER@$s "cd $HADOOP_HOME && sudo sbin/hadoop-daemon.sh --config $HADOOP_CONF_DIR --script hdfs start datanode" 2>/dev/null
     done
   else
     sbin/hadoop-daemons.sh --config $HADOOP_CONF_DIR --script hdfs start datanode
@@ -51,7 +51,7 @@ case $1 in
 "stop-slave")
   if [ "$KERBEROS_ENABLED" -eq "1" ]; then
     for s in $(cat etc/hadoop/slaves); do
-      ssh -t $USER@$s "cd $HADOOP_HOME && sudo sbin/hadoop-daemon.sh --config $HADOOP_CONF_DIR --script hdfs stop datanode"
+      ssh -t $USER@$s "cd $HADOOP_HOME && sudo sbin/hadoop-daemon.sh --config $HADOOP_CONF_DIR --script hdfs stop datanode" 2>/dev/null
     done
   else
     sbin/hadoop-daemons.sh --config $HADOOP_CONF_DIR --script hdfs stop datanode
@@ -82,7 +82,7 @@ case $1 in
   do
     echo "==============";
     echo "Checking slave: $s";
-    ssh -t $USER@$s 'ps -ef | perl -lne "print \"\$1 \$2\" if m/^(?!root)\\w+\\s*(\\d+).*\\.(DataNode|NodeManager)/"'
+    ssh -t $USER@$s 'ps -ef | perl -lne "print \"\$1 \$2\" if m/^(?!root)\\w+\\s*(\\d+).*\\.(DataNode|NodeManager)/"' 2>/dev/null
     echo "==============";
   done
 ;;
@@ -106,7 +106,7 @@ case $1 in
   do
     echo "==============";
     echo "Deleting logs slave: $s";
-    ssh -t $USER@$s "sudo rm -r $HADOOP_HOME/logs/*"
+    ssh -t $USER@$s "sudo rm -r $HADOOP_HOME/logs/*" 2>/dev/null
     echo "==============";
   done
 ;;
