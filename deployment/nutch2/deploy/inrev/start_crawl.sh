@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source inrev/env.sh
+source inrev/nutch.env
 MAXDEPTH=3
 
 echo "$$" > my.pid

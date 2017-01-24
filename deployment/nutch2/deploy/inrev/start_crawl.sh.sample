@@ -1,0 +1,56 @@
+#!/bin/bash
+
+MAXDEPTH=3
+
+EMAILS=aman.telkar@simplify360.com,binit@simplify360.com;
+MAXCYCLETIME=6;
+
+echo "$$" > my.pid
+while [ 1 ]
+do
+  DATE=$(date)
+  STARTTIME=$(date +%s);
+  echo
+  echo "Starting next crawl cycle at: $DATE"
+  
+  echo "Downloading seed file"
+  wget -O /tmp/seed.txt "http://srv1/bmapi/crss-seed" &&
+  mv /tmp/seed.txt inrev/superseed.txt || {
+    echo "Downloading seed failed, using old one";
+  }
+
+  echo "Downloading regex rules"
+  for (( depth=1; depth<=$MAXDEPTH; depth++ )); do
+    F=${depth}.regex-urlfilter.txt
+    wget -O /tmp/$F "http://srv1/bmapi/crssregex?depth=$depth" &&
+      mv /tmp/$F inrev/ || {
+      echo "Downloading $F failed, using old one";
+      break;
+    }
+  done
+
+
+  SIZE=$(wc -l inrev/superseed.txt | awk '{ print $1}')
+  echo "Using inrev/superseed.txt as seed, total: $SIZE"
+  ./bin/hadoop fs -put -f inrev/superseed.txt /urls/seed.txt
+  ./inrev/single-crawler.sh /urls/ cs "http://linux08:8983/solr/sites" 2 || {
+      echo "Nutch processing failed, sending mail";
+      echo "Nutch processing failed in $(hostname)" | mail -s "NUTCH PROCESS FAILED" $EMAILS;
+  };
+  
+
+  ENDTIME=$(date +%s);
+
+  CYCLETIME=$((ENDTIME - STARTTIME));
+
+  CYCLETIMEINHR=$((CYCLETIME / 3600));
+
+  echo "Cycle time is $CYCLETIMEINHR Hours";
+
+  if [[ $CYCLETIMEINHR -ge $MAXCYCLETIME ]]; then
+    echo "Nutch cycle time is more than $MAXCYCLETIME hours in $(hostname), sending mail";
+    echo "Nutch cycle time is more than $MAXCYCLETIME hours in $(hostname)" | mail -s "NUTCH CYCLE TIME" $EMAILS;
+  fi
+
+  sleep 120
+done

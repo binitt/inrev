@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source inrev/env.sh
+source inrev/hadoop.env
 
 case $1 in
 "start-master")
