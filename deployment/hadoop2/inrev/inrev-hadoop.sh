@@ -3,6 +3,21 @@
 source inrev/hadoop.env
 
 case $1 in
+"start-all")
+  $0 "start-master"
+  $0 "start-slave"
+;;
+
+"stop-all")
+  $0 "stop-master"
+  $0 "stop-slave"
+;;
+
+"check-all")
+  $0 "check-master"
+  $0 "check-slave"
+;;
+
 "start-master")
   sbin/hadoop-daemon.sh --config $HADOOP_CONF_DIR --script hdfs start namenode
   sbin/yarn-daemon.sh --config $HADOOP_CONF_DIR start resourcemanager
@@ -65,20 +80,24 @@ case $1 in
 "check-slave")
   for s in $(cat etc/hadoop/slaves);
   do
-	echo "==============";
-	echo "Checking slave: $s";
-	ssh -t linux@linux13 'ps -ef | perl -lne "print \"\$1 \$2\" if m/^(?!root)\\w+\\s*(\\d+).*\\.(SecureDataNodeStarter|NodeManager)/"'
-	echo "==============";
+    echo "==============";
+    echo "Checking slave: $s";
+    ssh -t linux@linux13 'ps -ef | perl -lne "print \"\$1 \$2\" if m/^(?!root)\\w+\\s*(\\d+).*\\.(SecureDataNodeStarter|NodeManager)/"'
+    echo "==============";
   done
+;;
+
+"check-slave-single")
+  ps -ef | perl -lne "print \"\$1 \$2\" if m/^(?!root)\\w+\\s*(\\d+).*\\.(SecureDataNodeStarter|NodeManager)/"
 ;;
 
 "sync-slave")
   for s in $(cat etc/hadoop/slaves);
   do
-	echo "==============";
-	echo "Syncing slave: $s";
-	rsync -tvr etc/hadoop/ $USER@$s:$HADOOP_CONF_DIR/
-	echo "==============";
+    echo "==============";
+    echo "Syncing slave: $s";
+    rsync -tvr etc/hadoop/ $USER@$s:$HADOOP_CONF_DIR/
+    echo "==============";
   done
 ;;
 
@@ -106,6 +125,10 @@ case $1 in
 ;;
 
 *)
-  echo "Usage: $0 <start-master|stop-master|start-slave|stop-slave|sync-slave|check-slave|clear-logs|format>";
+  echo "Usage 1: $0 <start-all|stop-all|check-all>";
+  echo "Usage 2: $0 <start-master|stop-master|check-master>";
+  echo "Usage 3: $0 <start-slave|stop-slave|sync-slave|check-slave>";
+  echo "Usage 4: $0 <start-slave-single|stop-slave-single|check-slave-single>";
+  echo "Usage 5: $0 <clear-logs|format>";
   exit 1;
 esac
