@@ -117,7 +117,7 @@ case $1 in
   for s in $(cat etc/hadoop/slaves);
   do    
         echo "  In slave: $s";
-        ssh $USER@$s 'rm -rf hadoop/data/*'
+        ssh -t $USER@$s 'rm -rf hadoop/data/*' 2>/dev/null
   done
   
   rm -rf data
